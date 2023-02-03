@@ -7,11 +7,19 @@
 
 #include <iostream>
 
-color ray_color(const ray& r, const hittable& world) {
+color ray_color(const ray& r, const hittable& world,  int depth) {
     hit_data data;
-    if (world.hit(r, 0, infinity, data)) {
+
+    // If we've exceeded the ray bounce limit, no more light is gathered.
+    if (depth <= 0)
+        return color(0,0,0);
+
+    if (world.hit(r, 0.001, infinity, data)) {
          //+1 and *0.5  so that the range goes from -1 -> 1 to  0 -> 1
-        return 0.5 * (data.hit_normal + color(1,1,1));
+        //   return 0.5 * (data.hit_normal + color(1,1,1));
+        point3 target = data.hit_point + random_in_hemisphere(data.hit_normal);
+        // point3 target = data.hit_point + data.hit_normal + random_unit_vector();
+        return 0.5 * ray_color(ray(data.hit_point, target - data.hit_point), world, depth-1);
     }
     vec3 unit_direction = unit_vector(r.direction());
     auto t = 0.5*(unit_direction.y() + 1.0);
@@ -26,6 +34,7 @@ int main() {
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
+    const int max_depth = 50;
 
     // World
     hittable_list world;
@@ -48,7 +57,7 @@ int main() {
                 auto u = (i + random_double()) / (image_width-1);
                 auto v = (j + random_double()) / (image_height-1);
                 ray r = cam.get_ray(u, v);
-                pixel_color += ray_color(r, world);
+                pixel_color += ray_color(r, world, max_depth);
             }
             write_color(std::cout, pixel_color, samples_per_pixel);
         }
