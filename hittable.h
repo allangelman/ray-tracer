@@ -2,10 +2,14 @@
 #define HITTABLE_H
 
 #include "ray.h"
+#include "utility.h"
+
+class material;
 
 struct hit_data {
     point3 hit_point;
     vec3 hit_normal;
+    shared_ptr<material> material_pointer;
     double t;
     bool front_face;
 
