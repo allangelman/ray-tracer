@@ -9,7 +9,7 @@ struct hit_data;
 class material {
     public:
         virtual bool scatter(
-            const ray& r_in, const hit_data& rec, color& attenuation, ray& scattered
+            const ray& r_in, const hit_data& data, color& attenuation, ray& scattered
         ) const = 0;
 };
 
@@ -18,16 +18,16 @@ class lambertian : public material {
         lambertian(const color& a) : albedo(a) {}
 
         virtual bool scatter(
-            const ray& r_in, const hit_data& rec, color& attenuation, ray& scattered
+            const ray& r_in, const hit_data& data, color& attenuation, ray& scattered
         ) const override {
-            auto scatter_direction = rec.hit_normal + random_unit_vector();
+            auto scatter_direction = data.hit_normal + random_unit_vector();
 
             // Catch degenerate scatter direction
             if (scatter_direction.near_zero())
-                scatter_direction = rec.hit_normal;
+                scatter_direction = data.hit_normal;
 
 
-            scattered = ray(rec.hit_point, scatter_direction);
+            scattered = ray(data.hit_point, scatter_direction);
             attenuation = albedo;
             return true;
         }
@@ -38,19 +38,21 @@ class lambertian : public material {
 
 class metal : public material {
     public:
-        metal(const color& a) : albedo(a) {}
+       metal(const color& a, double f) : albedo(a), fuzz(f < 1 ? f : 1) {}
 
         virtual bool scatter(
-            const ray& r_in, const hit_data& rec, color& attenuation, ray& scattered
+            const ray& r_in, const hit_data& data, color& attenuation, ray& scattered
         ) const override {
-            vec3 reflected = reflect(unit_vector(r_in.direction()), rec.hit_normal);
-            scattered = ray(rec.hit_point, reflected);
+            vec3 reflected = reflect(unit_vector(r_in.direction()), data.hit_normal);
+            scattered = ray(data.hit_point, reflected + fuzz*random_in_unit_sphere());
+            // scattered = ray(data.hit_point, reflected);
             attenuation = albedo;
-            return (dot(scattered.direction(), rec.hit_normal) > 0);
+            return (dot(scattered.direction(), data.hit_normal) > 0);
         }
 
     public:
         color albedo;
+        double fuzz;
 };
 
 #endif
