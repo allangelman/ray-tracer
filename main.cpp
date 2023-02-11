@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "material.h"
 // #include "hittable.h"
+#include "bvh.h"
 
 #include <iostream>
 
@@ -81,6 +82,46 @@ hittable_list random_scene() {
     return world;
 }
 
+hittable_list bvh_test_scene() {
+    // hittable_list boxes1;
+    // auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+
+    // const int boxes_per_side = 20;
+    // for (int i = 0; i < boxes_per_side; i++) {
+    //     for (int j = 0; j < boxes_per_side; j++) {
+    //         auto w = 100.0;
+    //         auto x0 = -1000.0 + i*w;
+    //         auto z0 = -1000.0 + j*w;
+    //         auto y0 = 0.0;
+    //         auto x1 = x0 + w;
+    //         auto y1 = random_double(1,101);
+    //         auto z1 = z0 + w;
+
+    //         boxes1.add(make_shared<box>(point3(x0,y0,z0), point3(x1,y1,z1), ground));
+    //     }
+    // }
+
+    hittable_list objects;
+
+    // objects.add(make_shared<bvh_node>(boxes1, 0, 1));
+
+    hittable_list boxes2;
+    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    int ns = 1000;
+    for (int j = 0; j < ns; j++) {
+        boxes2.add(make_shared<sphere>(point3::random(0,165), 10, white));
+    }
+
+    objects.add(make_shared<translate>(
+        make_shared<rotate_y>(
+            make_shared<bvh_node>(boxes2, 0.0, 1.0), 15),
+            vec3(-100,270,395)
+        )
+    );
+
+    return objects;
+}
+
 int main() {
 
     // Image
@@ -90,9 +131,9 @@ int main() {
 
     // const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 100;
+    const int samples_per_pixel = 500;
     // const int samples_per_pixel = 500;
-    const int max_depth = 50;
+    const int max_depth = 10;
 
     // World
     // hittable_list world;
@@ -109,7 +150,9 @@ int main() {
     // world.add(make_shared<sphere>(point3( R, 0, -1), R, material_right));
 
     // hittable_list world;
-        auto world = random_scene();
+
+    // auto world = random_scene();
+    auto world = bvh_test_scene();
 
     // auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
     // auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
@@ -132,13 +175,24 @@ int main() {
     // auto dist_to_focus = (lookfrom-lookat).length();
     // auto aperture = 2.0;
 
-    point3 lookfrom(13,2,3);
-    point3 lookat(0,0,0);
+    // SPHERE SCENE
+    // point3 lookfrom(13,2,3);
+    // point3 lookat(0,0,0);
+    // vec3 vup(0,1,0);
+    // auto dist_to_focus = 10.0;
+    // auto aperture = 0.1;
+    // auto vfov = 20.0;
+
+    // BVH SCENE
+    point3 lookfrom(478, 278, -600);
+    point3 lookat(278, 278, 0);
     vec3 vup(0,1,0);
     auto dist_to_focus = 10.0;
     auto aperture = 0.1;
+    auto vfov = 40.0;
 
-    camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
+
+    camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus);
 
     // Render
 
@@ -146,7 +200,7 @@ int main() {
     std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 
     for (int j = 0; j < image_height; ++j) {
-        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+        std::cerr << "\rScanlines remaining: " << image_height << ' ' <<j << ' ' << std::flush;
         for (int i = 0; i < image_width; ++i) {
             color pixel_color(0, 0, 0);
             for (int s = 0; s < samples_per_pixel; ++s) {
