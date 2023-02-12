@@ -17,7 +17,7 @@ class sphere : public hittable {
     public:
         point3 center;
         double radius;
-         shared_ptr<material> material_pointer;
+        shared_ptr<material> material_pointer;
 };
 
 bool sphere::hit(const ray& r, double t_min, double t_max, hit_data& data) const {

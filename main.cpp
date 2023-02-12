@@ -3,6 +3,7 @@
 #include "color.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "triangle.h"
 #include "camera.h"
 #include "material.h"
 // #include "hittable.h"
@@ -23,22 +24,12 @@ color ray_color(const ray& r, const hittable& world,  int depth) {
         if (data.material_pointer->scatter(r, data, attenuation, scattered))
             return attenuation * ray_color(scattered, world, depth-1);
         return color(0,0,0);
-
-        // //+1 and *0.5  so that the range goes from -1 -> 1 to  0 -> 1
-        // //   return 0.5 * (data.hit_normal + color(1,1,1));
-        // point3 target = data.hit_point + random_in_hemisphere(data.hit_normal);
-        // // point3 target = data.hit_point + data.hit_normal + random_unit_vector();
-        // return 0.5 * ray_color(ray(data.hit_point, target - data.hit_point), world, depth-1);
     }
 
     vec3 unit_direction = unit_vector(r.direction());
     auto t = 0.5*(unit_direction.y() + 1.0);
     return (1.0-t)*color(1.0, 1.0, 1.0) + t*color(0.5, 0.7, 1.0);
 }
-
- //TODO FOR ME!!!!!:  make one hittable list that is called boxes and add all the spheres to that
- // THEN MAKE A BVH NODE OUT OF THAT LIST? AND ADD IT TO THE WORLD
-
 
 hittable_list random_scene_bvh() {
     hittable_list world;
@@ -128,6 +119,7 @@ hittable_list random_scene() {
 
     auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
     world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
+    world.add(make_shared<triangle>(point3(4, 1, 0),point3(4, 1, 0), point3(4, 1, 0), material2));
 
     auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
     world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
@@ -135,28 +127,28 @@ hittable_list random_scene() {
     return world;
 }
 
+hittable_list triangle_scene() {
+    hittable_list world;
+
+    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
+
+    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
+    auto material1 = make_shared<dielectric>(1.5);
+    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
+    world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material3));
+    world.add(make_shared<sphere>(point3(3, 1, 2), 1.0, material3));
+    world.add(make_shared<triangle>(point3(4, 1, 0),point3(4, 2, 0), point3(5, 1, 0), material2));
+    world.add(make_shared<triangle>(point3(6, 1, 0),point3(6, 2, 0), point3(7, 1, 0), material3));
+
+    return world;
+}
+
 hittable_list bvh_test_scene() {
-    // hittable_list boxes1;
-    // auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 
-    // const int boxes_per_side = 20;
-    // for (int i = 0; i < boxes_per_side; i++) {
-    //     for (int j = 0; j < boxes_per_side; j++) {
-    //         auto w = 100.0;
-    //         auto x0 = -1000.0 + i*w;
-    //         auto z0 = -1000.0 + j*w;
-    //         auto y0 = 0.0;
-    //         auto x1 = x0 + w;
-    //         auto y1 = random_double(1,101);
-    //         auto z1 = z0 + w;
-
-    //         boxes1.add(make_shared<box>(point3(x0,y0,z0), point3(x1,y1,z1), ground));
-    //     }
-    // }
+    //TODO MAYBE ADD BOXES
 
     hittable_list objects;
-
-    // objects.add(make_shared<bvh_node>(boxes1, 0, 1));
 
     hittable_list boxes2;
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -181,54 +173,15 @@ int main() {
     // const auto aspect_ratio = 16.0 / 9.0;
     const auto aspect_ratio = 3.0 / 2.0;
     const int image_width = 100;
-
-    // const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 500;
-    // const int samples_per_pixel = 500;
+    const int samples_per_pixel = 100;
     const int max_depth = 10;
 
-    // World
-    // hittable_list world;
-    // world.add(make_shared<sphere>(point3(0,0,-1), 0.5));
-    // world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
 
-    // auto R = cos(pi/4);
-    // hittable_list world;
-
-    // auto material_left  = make_shared<lambertian>(color(0,0,1));
-    // auto material_right = make_shared<lambertian>(color(1,0,0));
-
-    // world.add(make_shared<sphere>(point3(-R, 0, -1), R, material_left));
-    // world.add(make_shared<sphere>(point3( R, 0, -1), R, material_right));
-
-    // hittable_list world;
-
-    auto world = random_scene();
+    // auto world = random_scene();
     // auto world = random_scene_bvh();
     // auto world = bvh_test_scene();
-
-
-    // auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
-    // auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
-    // auto material_left   = make_shared<dielectric>(1.5);
-    // auto material_right  = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
-
-    // world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
-    // world.add(make_shared<sphere>(point3( 0.0,    0.0, -1.0),   0.5, material_center));
-    // world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
-    // world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0), -0.45, material_left));
-    // world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
-
-    // Camera
-    // camera cam(90.0, aspect_ratio);
-    // camera cam(point3(-2,2,1), point3(0,0,-1), vec3(0,1,0), 20, aspect_ratio);
-
-    // point3 lookfrom(3,3,2);
-    // point3 lookat(0,0,-1);
-    // vec3 vup(0,1,0);
-    // auto dist_to_focus = (lookfrom-lookat).length();
-    // auto aperture = 2.0;
+    auto world = triangle_scene();
 
     // SPHERE SCENE
     point3 lookfrom(13,2,3);
