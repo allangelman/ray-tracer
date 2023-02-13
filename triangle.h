@@ -13,10 +13,10 @@ class triangle : public hittable {
     public:
         triangle() {}
         triangle(point3 point_a, point3 point_b, point3 point_c, shared_ptr<material> m) : point_a(point_a), point_b(point_b), point_c(point_c), material_pointer(m) {
-            std::cerr << "TRIANGLE A: " << point_a  << "\n";
-            std::cerr << "TRIANGLE B: " <<  point_b  << "\n";
-            std::cerr << "TRIANGLE C: " <<  point_c << "\n";
-            std::cerr << "MINUS: " << point_a[0] - point_b[0]  << "\n";
+            // std::cerr << "TRIANGLE A: " << point_a  << "\n";
+            // std::cerr << "TRIANGLE B: " <<  point_b  << "\n";
+            // std::cerr << "TRIANGLE C: " <<  point_c << "\n";
+            // std::cerr << "MINUS: " << point_a[0] - point_b[0]  << "\n";
         };
 
         virtual bool hit(
@@ -51,7 +51,7 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
 
     Vector3f x = A.inverse() * B;
 
-    // std::cerr << "X: " << x << "\n";
+    // std::cerr << "X: " << x[0] << ' ' << x[1] << ' ' << x[2] << ' ' << data.t << "\n";
 
     if ((x[0] + x[1] > 1) || (x[2] <= t_min) || (x[0] < 0) || (x[1] < 0)){
         return false;
@@ -59,7 +59,7 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
 
     // without this conditional causes image that is named trianglebug.ppm
     if (x[2] < data.t) {
-        // std::cerr << "x[2]: " << r.orig << "\n";
+        // std::cerr << "x[2]: " << x[2] << ' '<< data.t << "\n";
         vec3 triangle_vec_1 = point_b - point_a;
         vec3 triangle_vec_2 = point_c - point_a;
 
