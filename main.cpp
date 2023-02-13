@@ -8,6 +8,7 @@
 #include "material.h"
 // #include "hittable.h"
 #include "bvh.h"
+#include "mesh.h"
 
 #include <iostream>
 
@@ -130,16 +131,27 @@ hittable_list random_scene() {
 hittable_list triangle_scene() {
     hittable_list world;
 
-    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-    world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
+    auto ground_material = make_shared<lambertian>(color(0.9, 0.5, 0.5));
+    // world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
+    world.add(make_shared<sphere>(point3(-1000,0,-1000), 1000, ground_material));
+
+
 
     auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
+
+    auto material4 = make_shared<lambertian>(color(0.7, 0.3, 0.3));
     auto material1 = make_shared<dielectric>(1.5);
     auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
-    world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material3));
-    world.add(make_shared<sphere>(point3(3, 1, 2), 1.0, material3));
-    world.add(make_shared<triangle>(point3(4, 1, 0),point3(4, 2, 0), point3(5, 1, 0), material2));
-    world.add(make_shared<triangle>(point3(6, 1, 0),point3(6, 2, 0), point3(7, 1, 0), material3));
+    // world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material3));
+    // world.add(make_shared<sphere>(point3(0, 0, 0), 1.0, material3));
+    // world.add(make_shared<sphere>(point3(3, 1, 2), 1.0, material3));
+    // world.add(make_shared<triangle>(point3(4, 1, 0),point3(4, 2, 0), point3(5, 1, 0), material2));
+    // world.add(make_shared<triangle>(point3(6, 1, 0),point3(6, 2, 0), point3(7, 1, 0), material3));
+
+    // world.add(make_shared<triangle>(point3(-3.14912, -3.14912, 0),point3(3.14912, -3.14912, 0), point3(-3.14912, 3.14912, 0), material3));
+    //  world.add(make_shared<triangle>(point3(-3.14912, 3.14912, 0),point3(3.14912, -3.14912, 0), point3(3.14912, 3.14912, 0), material3));
+
+    world.add(make_shared<mesh>("hi", material3));
 
     return world;
 }
@@ -172,7 +184,7 @@ int main() {
     // Image
     // const auto aspect_ratio = 16.0 / 9.0;
     const auto aspect_ratio = 3.0 / 2.0;
-    const int image_width = 100;
+    const int image_width = 20;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
     const int max_depth = 10;
@@ -184,7 +196,7 @@ int main() {
     auto world = triangle_scene();
 
     // SPHERE SCENE
-    point3 lookfrom(13,2,3);
+    point3 lookfrom(20,2,20);
     point3 lookat(0,0,0);
     vec3 vup(0,1,0);
     auto dist_to_focus = 10.0;

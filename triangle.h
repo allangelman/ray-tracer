@@ -12,12 +12,19 @@ using Eigen::Vector3f;
 class triangle : public hittable {
     public:
         triangle() {}
-        triangle(point3 point_a, point3 point_b, point3 point_c, shared_ptr<material> m) : point_a(point_a), point_b(point_b), point_c(point_c), material_pointer(m) {};
+        triangle(point3 point_a, point3 point_b, point3 point_c, shared_ptr<material> m) : point_a(point_a), point_b(point_b), point_c(point_c), material_pointer(m) {
+            std::cerr << "TRIANGLE A: " << point_a  << "\n";
+            std::cerr << "TRIANGLE B: " <<  point_b  << "\n";
+            std::cerr << "TRIANGLE C: " <<  point_c << "\n";
+            std::cerr << "MINUS: " << point_a[0] - point_b[0]  << "\n";
+        };
 
         virtual bool hit(
             const ray& r, double t_min, double t_max, hit_data& rec) const override;
 
         virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
+
+
 
     public:
         point3 point_a;
@@ -27,7 +34,8 @@ class triangle : public hittable {
 };
 
 bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) const {
-
+    // using barycentric
+    // look at 6.837 slides
     Matrix3f A;
     A(0) = point_a[0] - point_b[0];
 	A(1) = point_a[1] - point_b[1];
@@ -43,13 +51,15 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
 
     Vector3f x = A.inverse() * B;
 
+    // std::cerr << "X: " << x << "\n";
+
     if ((x[0] + x[1] > 1) || (x[2] <= t_min) || (x[0] < 0) || (x[1] < 0)){
         return false;
     }
 
-    // if (x[2] < data.t) not sure if we need this
-
+    // without this conditional causes image that is named trianglebug.ppm
     if (x[2] < data.t) {
+        // std::cerr << "x[2]: " << r.orig << "\n";
         vec3 triangle_vec_1 = point_b - point_a;
         vec3 triangle_vec_2 = point_c - point_a;
 
@@ -63,34 +73,6 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
     }
 
     return false;
-
-    // return false;
-
-    // vec3 originToCenter = r.origin() - center;
-    // auto a = dot(r.direction(), r.direction());
-    // auto b = 2.0 * dot(originToCenter, r.direction());
-    // // auto half_b = b/2.0;
-    // auto c = dot(originToCenter, originToCenter) - radius*radius;
-    // auto discriminant = b*b - 4*a*c;
-
-    // if (discriminant < 0) return false;
-    // auto sqrtd = sqrt(discriminant);
-
-    // // Find the nearest root that lies in the acceptable range.
-    // auto root = (-b - sqrtd ) / (2.0*a);
-    // if (root < t_min || t_max < root) {
-    //     root = (-b + sqrtd ) / (2.0*a);
-    //     if (root < t_min || t_max < root)
-    //         return false;
-    // }
-
-    // data.t = root;
-    // data.hit_point = r.at(data.t);
-    // vec3 outward_normal = (data.hit_point - center) / radius;
-    // data.set_face_normal(r, outward_normal);
-    // data.material_pointer = material_pointer;
-
-    // return true;
 }
 
 bool triangle::bounding_box(double time0, double time1, aabb& output_box) const {
