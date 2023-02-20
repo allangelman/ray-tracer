@@ -12,7 +12,7 @@ using Eigen::Vector3f;
 class triangle : public hittable {
     public:
         triangle() {}
-        triangle(point3 point_a, point3 point_b, point3 point_c, shared_ptr<material> m) : point_a(point_a), point_b(point_b), point_c(point_c), material_pointer(m) {
+        triangle(point3 point_a, point3 point_b, point3 point_c, shared_ptr<material> m, vec3 normal = vec3(0,0,0)) : point_a(point_a), point_b(point_b), point_c(point_c), material_pointer(m), normal(normal) {
             // std::cerr << "TRIANGLE A: " << point_a  << "\n";
             // std::cerr << "TRIANGLE B: " <<  point_b  << "\n";
             // std::cerr << "TRIANGLE C: " <<  point_c << "\n";
@@ -30,6 +30,7 @@ class triangle : public hittable {
         point3 point_a;
         point3 point_b;
         point3 point_c;
+        vec3 normal;
         shared_ptr<material> material_pointer;
 };
 
@@ -60,13 +61,20 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
     // without this conditional causes image that is named trianglebug.ppm
     if (x[2] < data.t) {
         // std::cerr << "x[2]: " << x[2] << ' '<< data.t << "\n";
-        vec3 triangle_vec_1 = point_b - point_a;
-        vec3 triangle_vec_2 = point_c - point_a;
+        vec3 triangle_vec_1 = point_a - point_b;
+        vec3 triangle_vec_2 = point_c - point_b;
+
+
 
         data.t = x[2];
         data.hit_point = r.at(data.t);
-        vec3 outward_normal = cross(triangle_vec_1, triangle_vec_2);
-        data.set_face_normal(r, outward_normal);
+        if (normal[0] == 0 && normal[1] == 0 && normal[2] ==0 ){
+            vec3 outward_normal = cross(triangle_vec_2, triangle_vec_1);
+            data.set_face_normal(r, outward_normal);
+        }
+        else{
+            data.set_face_normal(r, normal);
+        }
         data.material_pointer = material_pointer;
 
         return true;
@@ -76,12 +84,14 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
 }
 
 bool triangle::bounding_box(double time0, double time1, aabb& output_box) const {
-    auto  min_x = std::min({point_a[0], point_b[0], point_c[0]});
-    auto  min_y = std::min({point_a[1], point_b[1], point_c[1]});
-    auto  min_z = std::min({point_a[2], point_b[2], point_c[2]});
-    auto  max_x = std::max({point_a[0], point_b[0], point_c[0]});
-    auto  max_y = std::max({point_a[1], point_b[1], point_c[1]});
-    auto  max_z = std::max({point_a[2], point_b[2], point_c[2]});
+    // std::cerr << "TRIANGLE" << "\n";
+    auto min_x = std::min({point_a[0], point_b[0], point_c[0]});
+    auto min_y = std::min({point_a[1], point_b[1], point_c[1]});
+    auto min_z = std::min({point_a[2], point_b[2], point_c[2]});
+    auto max_x = std::max({point_a[0], point_b[0], point_c[0]});
+    auto max_y = std::max({point_a[1], point_b[1], point_c[1]});
+    auto max_z = std::max({point_a[2], point_b[2], point_c[2]});
+    // std::cerr << "TRIANGLE: " << vec3(min_x, min_y, min_z) << ' ' << vec3(max_x, max_y, max_z) << "\n";
     output_box = aabb(vec3(min_x, min_y, min_z), vec3(max_x, max_y, max_z));
     return true;
 }

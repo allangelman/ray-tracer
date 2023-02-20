@@ -17,8 +17,11 @@ class aabb {
                                (maximum[a] - r.origin()[a]) / r.direction()[a]);
                 auto t1 = fmax((minimum[a] - r.origin()[a]) / r.direction()[a],
                                (maximum[a] - r.origin()[a]) / r.direction()[a]);
+
                 t_min = fmax(t0, t_min);
                 t_max = fmin(t1, t_max);
+                // std::cerr << "t_min: " << t_min << "\n";
+                // std::cerr << "t_max: " << t_max << "\n";
                 if (t_max <= t_min)
                     return false;
             }

@@ -8,6 +8,7 @@
 #include "material.h"
 // #include "hittable.h"
 #include "bvh.h"
+#include "box.h"
 #include "mesh.h"
 
 #include <iostream>
@@ -130,7 +131,7 @@ hittable_list random_scene() {
 
 hittable_list triangle_scene() {
     hittable_list world;
-
+    hittable_list triangles;
     auto ground_material = make_shared<lambertian>(color(0.9, 0.5, 0.5));
     // world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
     world.add(make_shared<sphere>(point3(-1000,0,-1000), 1000, ground_material));
@@ -148,10 +149,19 @@ hittable_list triangle_scene() {
     // world.add(make_shared<triangle>(point3(4, 1, 0),point3(4, 2, 0), point3(5, 1, 0), material2));
     // world.add(make_shared<triangle>(point3(6, 1, 0),point3(6, 2, 0), point3(7, 1, 0), material3));
 
-    // world.add(make_shared<triangle>(point3(-3.14912, -3.14912, 0),point3(3.14912, -3.14912, 0), point3(-3.14912, 3.14912, 0), material3));
-    //  world.add(make_shared<triangle>(point3(-3.14912, 3.14912, 0),point3(3.14912, -3.14912, 0), point3(3.14912, 3.14912, 0), material3));
+    // world.add(make_shared<triangle>(point3(-3.14912, -3.14912, 0),point3(3.14912, -3.14912, 0), point3(-3.14912, 3.14912, 1.0), material3));
+    // world.add(make_shared<triangle>(point3(-3.14912, 3.14912, 0),point3(3.14912, -3.14912, 0), point3(3.14912, 3.14912, 0), material3));
 
-    world.add(make_shared<mesh>("hi", material3));
+    // triangles.add(make_shared<triangle>(point3(-3.14912, -3.14912, 0),point3(3.14912, -3.14912, 0), point3(-3.14912, 3.14912, 1.0), material3));
+    // triangles.add(make_shared<box>(point3(-3.14912, -3.14912, 0),point3(3.14912, 3.14912, 1.0), material3));
+    // triangles.add(make_shared<triangle>(point3(-3.14912, 3.14912, 0),point3(3.14912, -3.14912, 1.0), point3(3.14912, 3.14912, 0), material3));
+    // triangles.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material3));
+
+    triangles.add(make_shared<mesh>("hi", material3));
+    world.add(make_shared<bvh_node>(triangles, 0.0, 1.0));
+
+
+    // world.add(make_shared<mesh>("hi", material3));
 
     return world;
 }
@@ -184,10 +194,10 @@ int main() {
     // Image
     // const auto aspect_ratio = 16.0 / 9.0;
     const auto aspect_ratio = 3.0 / 2.0;
-    const int image_width = 50;
+    const int image_width = 150;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 100;
-    const int max_depth = 10;
+    const int samples_per_pixel = 20;
+    const int max_depth = 5;
 
 
     // auto world = random_scene();

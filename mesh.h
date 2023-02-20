@@ -21,17 +21,8 @@ class mesh : public hittable {
         mesh() {}
         mesh(const std::string &filename, shared_ptr<material> m) {
             load(filename, m);
-            for (int i = 0; i < vertices.size(); ++i) {
-                // std::cerr << "verts: " << vertices[i] << "\n";
-                // std::cerr << "normals: " << normals[i] << "\n";
-
-            }
-            for (int i = 0; i < faces_info.size(); ++i) {
-                // std::cerr << "faces: " << faces_info[i][0] << ' ' << faces_info[i][1] << ' ' << faces_info[i][2] << ' ' << faces_info[i][3] << ' ' << faces_info[i][4] << ' ' << faces_info[i][5]<< "\n";
-            }
         }
 
-        // void clear() { objects.clear(); }
         void load(const std::string &filename, shared_ptr<material> m) {
             const int MAX_BUFFER_SIZE = 4096;
             char buffer[MAX_BUFFER_SIZE];
@@ -75,7 +66,6 @@ class mesh : public hittable {
 
                             //this pushes adg
                             if (count%2 == 0){
-                                //  std::cerr << "debug: " << token << "\n";
                                 f.push_back(stoul(token,nullptr,0));
                             }
                             i.erase(0, pos + delimiter.length());
@@ -84,21 +74,18 @@ class mesh : public hittable {
                             count++;
                         }
                         //this pushes cfi
-                        // std::cerr << "debug2: " << i << "\n";
                         f.push_back(stoul(i,nullptr,0));
                     }
-                    // std::cerr << "faces: " << f[0] << f[1] << f[2] << f[3]  << f[4]  << f[5] << "\n";
                     faces_info.push_back(f);
                 }
             }
 
             for (int i = 0; i < faces_info.size(); ++i) {
-                // std::cerr << "new face: " << i << "\n";
-                auto vert0 = faces_info[i][0] - 1 ;
-                auto vert1 = faces_info[i][2] - 1;
-                auto vert2 = faces_info[i][4] - 1 ;
-                // std::cerr << "VERTS: " << vert0 << vert1 << vert2<< "\n";
-                auto tri = make_shared<triangle>(vertices[vert0], vertices[vert1], vertices[vert2], m);
+                auto vert0Index = faces_info[i][0] - 1 ;
+                auto vert1Index = faces_info[i][2] - 1;
+                auto vert2Index = faces_info[i][4] - 1 ;
+                auto normalIndex = faces_info[i][1] - 1;
+                auto tri = make_shared<triangle>(vertices[vert0Index], vertices[vert1Index], vertices[vert2Index], m, normals[normalIndex]);
                 triangles.push_back(tri);
 
             }
@@ -121,18 +108,13 @@ class mesh : public hittable {
 };
 
 bool mesh::hit(const ray& r, double t_min, double t_max, hit_data& data) const {
-    // hit_data temp_data;
     bool hit_anything = false;
     auto closest_so_far = t_max;
 
-    // std::cerr << "HIT: " << r.orig << "\n";
-    // std::cerr << "MESSHHHHTRIANGLESIZE: " <<  triangles.size()<< "\n";
     for (const auto& object : triangles) {
         if (object->hit(r, t_min, closest_so_far, data)) {
-            // std::cerr << "MESHHIT: " << r.orig << "\n";
             hit_anything = true;
             closest_so_far = data.t;
-            // data = temp_data;
         }
     }
 
@@ -141,16 +123,16 @@ bool mesh::hit(const ray& r, double t_min, double t_max, hit_data& data) const {
 }
 
 bool mesh::bounding_box(double time0, double time1, aabb& output_box) const {
-    // if (objects.empty()) return false;
+    if (triangles.empty()) return false;
 
-    // aabb temp_box;
-    // bool first_box = true;
+    aabb temp_box;
+    bool first_box = true;
 
-    // for (const auto& object : objects) {
-    //     if (!object->bounding_box(time0, time1, temp_box)) return false;
-    //     output_box = first_box ? temp_box : surrounding_box(output_box, temp_box);
-    //     first_box = false;
-    // }
+    for (const auto& object : triangles) {
+        if (!object->bounding_box(time0, time1, temp_box)) return false;
+        output_box = first_box ? temp_box : surrounding_box(output_box, temp_box);
+        first_box = false;
+    }
 
     return true;
 }
