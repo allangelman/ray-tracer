@@ -8,6 +8,9 @@ struct hit_data;
 
 class material {
     public:
+        virtual color emitted() const {
+            return color(0,0,0);
+        }
         virtual bool scatter(
             const ray& r_in, const hit_data& data, color& attenuation, ray& scattered
         ) const = 0;
@@ -91,6 +94,25 @@ class dielectric : public material {
             r0 = r0*r0;
             return r0 + (1-r0)*pow((1 - cosine),5);
         }
+};
+
+class diffuse_light : public material  {
+    public:
+        diffuse_light(color c) : emit(c) {}
+
+        virtual bool scatter(
+            const ray& r_in, const hit_data& rec, color& attenuation, ray& scattered
+        ) const override {
+            return false;
+        }
+
+        //potentially remove u and v?
+        virtual color emitted() const override {
+            return emit;
+        }
+
+    public:
+        color emit;
 };
 
 #endif
