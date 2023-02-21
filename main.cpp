@@ -190,11 +190,11 @@ hittable_list cornell_box() {
     // objects.add(make_shared<box>(point3(130, 0, 65), point3(295, 165, 230), white));
     // objects.add(make_shared<box>(point3(265, 0, 295), point3(430, 330, 460), white));
     // objects.add(make_shared<sphere>(point3(320, 170, 370), 100.0, green));
-    // objects.add(make_shared<triangle>(point3(120, 20, 200),point3(400, 200, 100), point3(400, 22, 300), green));
+    objects.add(make_shared<triangle>(point3(120, 20, 200),point3(400, 200, 100), point3(400, 22, 300), green));
     // objects.add(make_shared<translate>(make_shared<mesh>("hi", red), vec3(320,170,370)));
 
     // objects.add(make_shared<mesh>("hi", red));
-    objects.add(make_shared<translate>(make_shared<mesh>("hi", red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<mesh>("hi", red), vec3(320,170,370)));
 
     world.add(make_shared<bvh_node>(objects, 0.0, 1.0));
 
@@ -205,7 +205,6 @@ hittable_list simple_light() {
     hittable_list objects;
     auto ground_material = make_shared<lambertian>(color(0.9, 0.5, 0.5));
     objects.add(make_shared<sphere>(point3(-1000,0,-1000), 1000, ground_material));
-
     auto green = make_shared<lambertian>(color(.12, .45, .15));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
     objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, white));
@@ -224,28 +223,39 @@ hittable_list final_scene() {
     auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     hittable_list objects;
 
-    const int boxes_per_side = 20;
-    for (int i = 0; i < boxes_per_side; i++) {
-        for (int j = 0; j < boxes_per_side; j++) {
-            auto w = 100.0;
-            auto x0 = -1000.0 + i*w;
-            auto z0 = -1000.0 + j*w;
-            auto y0 = 0.0;
-            auto x1 = x0 + w;
-            auto y1 = random_double(1,101);
-            auto z1 = z0 + w;
+    // const int boxes_per_side = 20;
+    // for (int i = 0; i < boxes_per_side; i++) {
+    //     for (int j = 0; j < boxes_per_side; j++) {
+    //         auto w = 100.0;
+    //         auto x0 = -1000.0 + i*w;
+    //         auto z0 = -1000.0 + j*w;
+    //         auto y0 = 0.0;
+    //         auto x1 = x0 + w;
+    //         auto y1 = random_double(1,101);
+    //         auto z1 = z0 + w;
 
-            boxes1.add(make_shared<box>(point3(x0,y0,z0), point3(x1,y1,z1), ground));
-        }
-    }
+    //         boxes1.add(make_shared<box>(point3(x0,y0,z0), point3(x1,y1,z1), ground));
+    //     }
+    // }
 
-    auto blue = make_shared<lambertian>(color(.65, .05, .95));
+    auto blue = make_shared<lambertian>(color(.05, .05, .95));
+    auto green = make_shared<lambertian>(color(.12, .45, .15));
+    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    // boxes1.add(make_shared<box>(point3(-200,-200,-200), point3(200,200,200), blue));
+    // boxes1.add(make_shared<triangle>(point3(120, 20, 200),point3(400, 200, 100), point3(400, 22, 300), green));
 
-    boxes1.add(make_shared<box>(point3(-300,0,395), point3(100,500,600), blue));
+
+    // boxes1.add(make_shared<yz_rect>(0, 555, 0, 555, 555, white));
+    // boxes1.add(make_shared<yz_rect>(0, 555, 0, 555, 0, white));
+    boxes1.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+    // boxes1.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
+    // boxes1.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto glass = make_shared<dielectric>(1.5);
-    boxes1.add(make_shared<translate>(make_shared<mesh>("hi", glass), vec3(0, 150, 145)));
+    boxes1.add(make_shared<translate>(make_shared<mesh>("hi", red), vec3(300, 150, 145)));
+
+    // objects.add(make_shared<triangle>(point3(0, 100, 145),point3(0, 300, 400), point3(100, 22, 300), red));
 
 
     objects.add(make_shared<bvh_node>(boxes1, 0, 1));
@@ -298,10 +308,10 @@ int main() {
     // const auto aspect_ratio = 16.0 / 9.0;
     // const auto aspect_ratio = 3.0 / 2.0;
     const auto aspect_ratio = 1.0;
-    const int image_width = 100;
+    const int image_width = 50;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 500;
-    const int max_depth = 10;
+    const int samples_per_pixel = 50;
+    const int max_depth = 5;
     color background(0,0,0);
 
 

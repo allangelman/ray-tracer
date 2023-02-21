@@ -37,6 +37,7 @@ class triangle : public hittable {
 bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) const {
     // using barycentric
     // look at 6.837 slides
+    // std::cerr << "data.t: " << data.t << "\n";
     Matrix3f A;
     A(0) = point_a[0] - point_b[0];
 	A(1) = point_a[1] - point_b[1];
@@ -58,13 +59,15 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
         return false;
     }
 
+    auto bo = t_max == infinity;
+    // std::cerr << "data.t OUTSDIE: " << bo << "\n";
+    // std::cerr << "data.t OUTSDIE: " << x[2] << ' ' << data.t << ' ' << t_min <<  ' ' << t_max << "\n";
     // without this conditional causes image that is named trianglebug.ppm
-    if (x[2] < data.t) {
+    if (x[2] < data.t || t_max == infinity) {
+        //  std::cerr << "data.t: " << x[2] << ' ' << data.t << ' ' << t_min <<  ' ' << t_max << "\n";
         // std::cerr << "x[2]: " << x[2] << ' '<< data.t << "\n";
         vec3 triangle_vec_1 = point_a - point_b;
         vec3 triangle_vec_2 = point_c - point_b;
-
-
 
         data.t = x[2];
         data.hit_point = r.at(data.t);
@@ -79,6 +82,7 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
 
         return true;
     }
+    else
 
     return false;
 }
