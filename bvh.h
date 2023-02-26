@@ -86,15 +86,14 @@ bvh_node::bvh_node(
     }
 
     aabb box_left, box_right;
-    // std::cerr << "box_left: " << left->bounding_box(time0, time1, box_left)  << "\n";
-    // std::cerr << "box_right: " << box_right.min() << ' ' << box_right.max() << "\n";
+
     if (  !left->bounding_box(time0, time1, box_left)
        || !right->bounding_box(time0, time1, box_right)
     )
         std::cerr << "No bounding box in bvh_node constructor.\n";
 
     box = surrounding_box(box_left, box_right);
-    // std::cerr << "box: " << box.maximum << ' ' << box.minimum << "\n";
+
 
 }
 
@@ -105,12 +104,11 @@ bool bvh_node::bounding_box(double time0, double time1, aabb& output_box) const 
 
 bool bvh_node::hit(const ray& r, double t_min, double t_max, hit_data& rec) const {
     if (!box.hit(r, t_min, t_max))
-        // std::cerr << "NOT hit: " <<  "\n";
+
         return false;
     bool hit_left = left->hit(r, t_min, t_max, rec);
     bool hit_right = right->hit(r, t_min, hit_left ? rec.t : t_max, rec);
-    // std::cerr << hit_left << hit_right << "\n";
-    //  std::cerr << hit_left << left.aabb << "\n";
+
 
     return hit_left || hit_right;
 }

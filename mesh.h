@@ -7,11 +7,6 @@
 #include <memory>
 #include <vector>
 #include <iostream>
-// #include <fstream>
-// #include <iostream>
-// #include <sstream>
-
-// using namespace std;
 
 using std::shared_ptr;
 using std::make_shared;
@@ -19,11 +14,11 @@ using std::make_shared;
 class mesh : public hittable {
     public:
         mesh() {}
-        mesh(const std::string &filename, shared_ptr<material> m) {
-            load(filename, m);
+        mesh(shared_ptr<material> m) {
+            load(m);
         }
 
-        void load(const std::string &filename, shared_ptr<material> m) {
+        void load(shared_ptr<material> m) {
             const int MAX_BUFFER_SIZE = 4096;
             char buffer[MAX_BUFFER_SIZE];
             while (std::cin.getline(buffer, MAX_BUFFER_SIZE)){

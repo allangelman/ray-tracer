@@ -34,143 +34,6 @@ color ray_color(const ray& r, const color& background, const hittable& world, in
     return emitted + attenuation * ray_color(scattered, background, world, depth-1);
 }
 
-hittable_list random_scene_bvh() {
-    hittable_list world;
-    hittable_list boxes;
-
-    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-    boxes.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
-
-    for (int a = -11; a < 11; a++) {
-        for (int b = -11; b < 11; b++) {
-            auto choose_mat = random_double();
-            point3 center(a + 0.9*random_double(), 0.2, b + 0.9*random_double());
-
-            if ((center - point3(4, 0.2, 0)).length() > 0.9) {
-                shared_ptr<material> sphere_material;
-
-                if (choose_mat < 0.8) {
-                    // diffuse
-                    auto albedo = color::random() * color::random();
-                    sphere_material = make_shared<lambertian>(albedo);
-                    boxes.add(make_shared<sphere>(center, 0.2, sphere_material));
-                } else if (choose_mat < 0.95) {
-                    // metal
-                    auto albedo = color::random(0.5, 1);
-                    auto fuzz = random_double(0, 0.5);
-                    sphere_material = make_shared<metal>(albedo, fuzz);
-                    boxes.add(make_shared<sphere>(center, 0.2, sphere_material));
-                } else {
-                    // glass
-                    sphere_material = make_shared<dielectric>(1.5);
-                    boxes.add(make_shared<sphere>(center, 0.2, sphere_material));
-                }
-            }
-        }
-    }
-
-    auto material1 = make_shared<dielectric>(1.5);
-    boxes.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
-
-    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
-    boxes.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
-
-    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
-    boxes.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
-
-    world.add(make_shared<bvh_node>(boxes, 0.0, 1.0));
-
-    return world;
-}
-
-hittable_list random_scene() {
-    hittable_list world;
-
-    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-    world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
-
-    for (int a = -11; a < 11; a++) {
-        for (int b = -11; b < 11; b++) {
-            auto choose_mat = random_double();
-            point3 center(a + 0.9*random_double(), 0.2, b + 0.9*random_double());
-
-            if ((center - point3(4, 0.2, 0)).length() > 0.9) {
-                shared_ptr<material> sphere_material;
-
-                if (choose_mat < 0.8) {
-                    // diffuse
-                    auto albedo = color::random() * color::random();
-                    sphere_material = make_shared<lambertian>(albedo);
-                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
-                } else if (choose_mat < 0.95) {
-                    // metal
-                    auto albedo = color::random(0.5, 1);
-                    auto fuzz = random_double(0, 0.5);
-                    sphere_material = make_shared<metal>(albedo, fuzz);
-                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
-                } else {
-                    // glass
-                    sphere_material = make_shared<dielectric>(1.5);
-                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
-                }
-            }
-        }
-    }
-
-    auto material1 = make_shared<dielectric>(1.5);
-    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
-
-    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
-    world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
-    world.add(make_shared<triangle>(point3(4, 1, 0),point3(4, 1, 0), point3(4, 1, 0), material2));
-
-    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
-    world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
-
-    return world;
-}
-
-hittable_list triangle_scene() {
-    hittable_list world;
-    hittable_list triangles;
-    auto ground_material = make_shared<lambertian>(color(0.9, 0.5, 0.5));
-    // world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
-    // world.add(make_shared<sphere>(point3(-1000,0,-1000), 1000, ground_material));
-
-
-
-    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
-
-    auto material4 = make_shared<lambertian>(color(0.7, 0.3, 0.3));
-    auto material1 = make_shared<dielectric>(1.5);
-    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
-    auto light = make_shared<diffuse_light>(color(15, 15, 15));
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
-    world.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
-
-    world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material3));
-    // world.add(make_shared<sphere>(point3(0, 0, 0), 1.0, material3));
-    // world.add(make_shared<sphere>(point3(3, 1, 2), 1.0, material3));
-    // world.add(make_shared<triangle>(point3(4, 1, 0),point3(4, 2, 0), point3(5, 1, 0), material2));
-    // world.add(make_shared<triangle>(point3(6, 1, 0),point3(6, 2, 0), point3(7, 1, 0), material3));
-
-    // world.add(make_shared<triangle>(point3(-3.14912, -3.14912, 0),point3(3.14912, -3.14912, 0), point3(-3.14912, 3.14912, 1.0), material3));
-    // world.add(make_shared<triangle>(point3(-3.14912, 3.14912, 0),point3(3.14912, -3.14912, 0), point3(3.14912, 3.14912, 0), material3));
-
-    // triangles.add(make_shared<triangle>(point3(-3.14912, -3.14912, 0),point3(3.14912, -3.14912, 0), point3(-3.14912, 3.14912, 1.0), material3));
-    // triangles.add(make_shared<box>(point3(-3.14912, -3.14912, 0),point3(3.14912, 3.14912, 1.0), material3));
-    // triangles.add(make_shared<triangle>(point3(-3.14912, 3.14912, 0),point3(3.14912, -3.14912, 1.0), point3(3.14912, 3.14912, 0), material3));
-    // triangles.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material3));
-
-    // triangles.add(make_shared<mesh>("hi", material3));
-    // world.add(make_shared<bvh_node>(triangles, 0.0, 1.0));
-
-
-    // world.add(make_shared<mesh>("hi", material3));
-
-    return world;
-}
-
 hittable_list cornell_box() {
     hittable_list objects;
     hittable_list world;
@@ -223,21 +86,6 @@ hittable_list final_scene() {
     auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     hittable_list objects;
 
-    // const int boxes_per_side = 20;
-    // for (int i = 0; i < boxes_per_side; i++) {
-    //     for (int j = 0; j < boxes_per_side; j++) {
-    //         auto w = 100.0;
-    //         auto x0 = -1000.0 + i*w;
-    //         auto z0 = -1000.0 + j*w;
-    //         auto y0 = 0.0;
-    //         auto x1 = x0 + w;
-    //         auto y1 = random_double(1,101);
-    //         auto z1 = z0 + w;
-
-    //         boxes1.add(make_shared<box>(point3(x0,y0,z0), point3(x1,y1,z1), ground));
-    //     }
-    // }
-
     auto blue = make_shared<lambertian>(color(.05, .05, .95));
     auto green = make_shared<lambertian>(color(.12, .45, .15));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -247,57 +95,20 @@ hittable_list final_scene() {
 
     // boxes1.add(make_shared<yz_rect>(0, 555, 0, 555, 555, white));
     // boxes1.add(make_shared<yz_rect>(0, 555, 0, 555, 0, white));
-    boxes1.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+    // boxes1.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
     // boxes1.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     // boxes1.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto glass = make_shared<dielectric>(1.5);
-    boxes1.add(make_shared<translate>(make_shared<mesh>("hi", red), vec3(300, 150, 145)));
+    auto light = make_shared<diffuse_light>(color(7, 7, 7));
 
-    // objects.add(make_shared<triangle>(point3(0, 100, 145),point3(0, 300, 400), point3(100, 22, 300), red));
-
-
+    boxes1.add(make_shared<translate>(make_shared<mesh>(red), vec3(300, 150, 145)));
+    boxes1.add(make_shared<xz_rect>(123, 423, 147, 412, 554, light));
     objects.add(make_shared<bvh_node>(boxes1, 0, 1));
 
-    auto light = make_shared<diffuse_light>(color(7, 7, 7));
-    objects.add(make_shared<xz_rect>(123, 423, 147, 412, 554, light));
-
-    // auto center1 = point3(400, 400, 200);
-    // auto center2 = center1 + vec3(30,0,0);
-
-    // objects.add(make_shared<sphere>(point3(260, 150, 45), 50, make_shared<dielectric>(1.5)));
-    // objects.add(make_shared<sphere>(
-    //     point3(0, 150, 145), 50, make_shared<metal>(color(0.8, 0.8, 0.9), 1.0)
-    // ));
-
-    // auto cube = make_shared<mesh>("hi", red);
-
-    // objects.add(make_shared<translate>(make_shared<bvh_node>(cube, 0, 1), vec3(100,270,395)));
-    // objects.add(make_shared<bvh_node>(cube, 0, 1));
-
-    return objects;
-}
-
-hittable_list bvh_test_scene() {
-
-    //TODO MAYBE ADD BOXES
-
-    hittable_list objects;
-
-    hittable_list boxes2;
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
-    int ns = 1000;
-    for (int j = 0; j < ns; j++) {
-        boxes2.add(make_shared<sphere>(point3::random(0,165), 10, white));
-    }
-
-    objects.add(make_shared<translate>(
-        make_shared<rotate_y>(
-            make_shared<bvh_node>(boxes2, 0.0, 1.0), 15),
-            vec3(-100,270,395)
-        )
-    );
+    // objects.add(make_shared<translate>(make_shared<mesh>(red), vec3(300, 150, 145)));
+    // objects.add(make_shared<xz_rect>(123, 423, 147, 412, 554, light));
 
     return objects;
 }
@@ -313,27 +124,6 @@ int main() {
     const int samples_per_pixel = 50;
     const int max_depth = 5;
     color background(0,0,0);
-
-
-    // SPHERE SCENE
-    // auto world = random_scene();
-    // auto world = triangle_scene();
-    // point3 lookfrom(20,2,20);
-    // point3 lookat(0,0,0);
-    // vec3 vup(0,1,0);
-    // auto dist_to_focus = 10.0;
-    // auto aperture = 0.1;
-    // auto vfov = 20.0;
-
-    // BVH SCENE
-    // auto world = random_scene_bvh();
-    // auto world = bvh_test_scene();
-    // point3 lookfrom(478, 278, -600);
-    // point3 lookat(278, 278, 0);
-    // vec3 vup(0,1,0);
-    // auto dist_to_focus = 10.0;
-    // auto aperture = 0.1;
-    // auto vfov = 40.0;
 
     //cornell_box
     // auto world = cornell_box();
