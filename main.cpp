@@ -52,6 +52,8 @@ hittable_list cornell_box() {
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
+    // objects.add(make_shared<triangle>(point3(120, 20, 200),point3(400, 200, 100), point3(400, 22, 300), green));
+
     //adding manually triangles - resulted in weird lighting i think because of normals
     // objects.add(make_shared<translate>(make_shared<triangle>(point3(-51.320016, -46.565577, 70.381863),point3(54.657696, -6.065080, 82.045443), point3(-82.744186, 50.397899, 19.213408), red), vec3(320,170,370)));
     // objects.add(make_shared<translate>(make_shared<triangle>(point3(-82.744186, 50.397899, 19.213408),point3(54.657696, -6.065080, 82.045443), point3(23.233526, 90.898396, 30.876989), red), vec3(320,170,370)));
@@ -66,7 +68,7 @@ hittable_list cornell_box() {
     // objects.add(make_shared<translate>(make_shared<triangle>(point3(-23.233526, -90.898396, -30.876989),point3(-51.320016, -46.565577, 70.381863), point3(-54.657696, 6.065080 ,-82.045443), red), vec3(320,170,370)));
     // objects.add(make_shared<translate>(make_shared<triangle>(point3(-54.657696, 6.065080, -82.045443),point3(-51.320016, -46.565577, 70.381863), point3(-82.744186 ,50.397899, 19.213408), red), vec3(320,170,370)));
 
-    //adding triangles from obj file -- good result and fast
+    // adding triangles from obj file -- good result and fast
     auto tri = m.loadget(red);
     for (int i = 0; i < tri.size(); i++) {
         objects.add(make_shared<translate>(tri[i], vec3(320,170,370)));
