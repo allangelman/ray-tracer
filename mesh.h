@@ -18,6 +18,11 @@ class mesh : public hittable {
             load(m);
         }
 
+        std::vector<shared_ptr<triangle>> loadget(shared_ptr<material> m) {
+            load(m);
+            return triangles;
+        }
+
         void load(shared_ptr<material> m) {
             const int MAX_BUFFER_SIZE = 4096;
             char buffer[MAX_BUFFER_SIZE];

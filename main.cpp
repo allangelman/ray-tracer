@@ -37,6 +37,7 @@ color ray_color(const ray& r, const color& background, const hittable& world, in
 hittable_list cornell_box() {
     hittable_list objects;
     hittable_list world;
+    mesh m;
 
     auto red   = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -44,20 +45,35 @@ hittable_list cornell_box() {
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
 
 
-    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, white));
-    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, white));
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
     objects.add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
-    // objects.add(make_shared<box>(point3(130, 0, 65), point3(295, 165, 230), white));
-    // objects.add(make_shared<box>(point3(265, 0, 295), point3(430, 330, 460), white));
-    // objects.add(make_shared<sphere>(point3(320, 170, 370), 100.0, green));
-    objects.add(make_shared<triangle>(point3(120, 20, 200),point3(400, 200, 100), point3(400, 22, 300), green));
-    // objects.add(make_shared<translate>(make_shared<mesh>("hi", red), vec3(320,170,370)));
 
-    // objects.add(make_shared<mesh>("hi", red));
-    // objects.add(make_shared<translate>(make_shared<mesh>("hi", red), vec3(320,170,370)));
+    //adding manually triangles - resulted in weird lighting i think because of normals
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-51.320016, -46.565577, 70.381863),point3(54.657696, -6.065080, 82.045443), point3(-82.744186, 50.397899, 19.213408), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-82.744186, 50.397899, 19.213408),point3(54.657696, -6.065080, 82.045443), point3(23.233526, 90.898396, 30.876989), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-82.744186, 50.397899, 19.213408),point3(23.233526, 90.898396, 30.876989), point3(-54.657696, 6.065080, -82.045443), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-54.657696, 6.065080, -82.045443),point3(23.233526, 90.898396, 30.876989), point3(51.320016, 46.565577, -70.381863), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-54.657696, 6.065080, -82.045443),point3(51.320016, 46.565577, -70.381863), point3(-23.233526, -90.898396, -30.876989), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-23.233526, -90.898396, -30.876989),point3(51.320016, 46.565577, -70.381863), point3(82.744186, -50.397899, -19.213408), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-23.233526, -90.898396, -30.876989),point3(82.744186, -50.397899, -19.213408), point3(-51.320016, -46.565577, 70.381863), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-51.320016, -46.565577, 70.381863),point3( 82.744186, -50.397899, -19.213408), point3(54.657696, -6.065080, 82.045443), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(54.657696, -6.065080, 82.045443),point3(82.744186, -50.397899, -19.213408), point3( 23.233526, 90.898396, 30.876989), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3( 23.233526, 90.898396, 30.876989),point3(82.744186, -50.397899 ,-19.213408), point3(51.320016 ,46.565577 ,-70.381863), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-23.233526, -90.898396, -30.876989),point3(-51.320016, -46.565577, 70.381863), point3(-54.657696, 6.065080 ,-82.045443), red), vec3(320,170,370)));
+    // objects.add(make_shared<translate>(make_shared<triangle>(point3(-54.657696, 6.065080, -82.045443),point3(-51.320016, -46.565577, 70.381863), point3(-82.744186 ,50.397899, 19.213408), red), vec3(320,170,370)));
+
+    //adding triangles from obj file -- good result and fast
+    auto tri = m.loadget(red);
+    for (int i = 0; i < tri.size(); i++) {
+        objects.add(make_shared<translate>(tri[i], vec3(320,170,370)));
+    }
+
+    //adding mesh to hittable list -- good result but slow... probably a bug here
+    // objects.add(make_shared<translate>(make_shared<mesh>(red), vec3(320,170,370)));
 
     world.add(make_shared<bvh_node>(objects, 0.0, 1.0));
 
@@ -86,9 +102,13 @@ hittable_list final_scene() {
     auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     hittable_list objects;
 
-    auto blue = make_shared<lambertian>(color(.05, .05, .95));
-    auto green = make_shared<lambertian>(color(.12, .45, .15));
+    auto blue = make_shared<lambertian>(color(.35, .55, .95));
+    auto green = make_shared<lambertian>(color(.30, .45, .23));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
+    auto terracotta= make_shared<lambertian>(color(.75, .35, .25));
+    auto terracottalight= make_shared<lambertian>(color(.88, .44, .35));
+
+    auto metalic = make_shared<metal>(color(.12, .45, .15), 0.3);
     // boxes1.add(make_shared<box>(point3(-200,-200,-200), point3(200,200,200), blue));
     // boxes1.add(make_shared<triangle>(point3(120, 20, 200),point3(400, 200, 100), point3(400, 22, 300), green));
 
@@ -96,6 +116,7 @@ hittable_list final_scene() {
     // boxes1.add(make_shared<yz_rect>(0, 555, 0, 555, 555, white));
     // boxes1.add(make_shared<yz_rect>(0, 555, 0, 555, 0, white));
     // boxes1.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+    boxes1.add(make_shared<box>(point3(200, -500, 200), point3(400, 0 , 400), terracottalight));
     // boxes1.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     // boxes1.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
@@ -103,12 +124,15 @@ hittable_list final_scene() {
     auto glass = make_shared<dielectric>(1.5);
     auto light = make_shared<diffuse_light>(color(7, 7, 7));
 
-    boxes1.add(make_shared<translate>(make_shared<mesh>(red), vec3(300, 150, 145)));
+    // objects.add(make_shared<sphere>(point3(400, 150, 170), 70, white));
+    // objects.add(make_shared<sphere>(point3(200, 300, 400), 70, red));
+
+    boxes1.add(make_shared<translate>(make_shared<mesh>(terracotta), vec3(300, 150, 145)));
     boxes1.add(make_shared<xz_rect>(123, 423, 147, 412, 554, light));
+    // objects.add(make_shared<xy_rect>(300, 400, 150, 300, 150, light));
     objects.add(make_shared<bvh_node>(boxes1, 0, 1));
 
-    // objects.add(make_shared<translate>(make_shared<mesh>(red), vec3(300, 150, 145)));
-    // objects.add(make_shared<xz_rect>(123, 423, 147, 412, 554, light));
+
 
     return objects;
 }
@@ -119,20 +143,20 @@ int main() {
     // const auto aspect_ratio = 16.0 / 9.0;
     // const auto aspect_ratio = 3.0 / 2.0;
     const auto aspect_ratio = 1.0;
-    const int image_width = 50;
+    const int image_width = 200;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 50;
-    const int max_depth = 5;
+    const int max_depth = 4;
     color background(0,0,0);
 
     //cornell_box
-    // auto world = cornell_box();
-    // auto lookfrom = point3(278, 278, -800);
-    // auto lookat = point3(278, 278, 0);
-    // vec3 vup(0,1,0);
-    // auto dist_to_focus = 10.0;
-    // auto aperture = 0.1;
-    // auto vfov = 40.0;
+    auto world = cornell_box();
+    auto lookfrom = point3(278, 278, -800);
+    auto lookat = point3(278, 278, 0);
+    vec3 vup(0,1,0);
+    auto dist_to_focus = 10.0;
+    auto aperture = 0.1;
+    auto vfov = 40.0;
 
     //simple_scene
     // auto world = simple_light();
@@ -144,14 +168,14 @@ int main() {
     // auto aperture = 0.1;
 
     //final_scene
-    auto world = final_scene();
-    auto dist_to_focus = 10.0;
-    auto aperture = 0.1;
-    vec3 vup(0,1,0);
-    background = color(0,0,0);
-    auto lookfrom = point3(478, 278, -600);
-    auto lookat = point3(278, 278, 0);
-    auto vfov = 40.0;
+    // auto world = final_scene();
+    // auto dist_to_focus = 10.0;
+    // auto aperture = 0.1;
+    // vec3 vup(0,1,0);
+    // background = color(.88, .44, .35);
+    // auto lookfrom = point3(320, 140, -450);
+    // auto lookat = point3(320, 130, 0);
+    // auto vfov = 40.0;
 
 
     camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus);
