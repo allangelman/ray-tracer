@@ -43,11 +43,13 @@ hittable_list cornell_box() {
     auto white = make_shared<lambertian>(color(.73, .73, .73));
     auto green = make_shared<lambertian>(color(.12, .45, .15));
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
-
+    auto glass = make_shared<dielectric>(1.5);
+    auto metalic = make_shared<metal>(color(.12, .45, .15), 0.3);
 
     objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
     objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
-    objects.add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
+    // objects.add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
+        objects.add(make_shared<xz_rect>(113, 443, 127, 432, 554, light));
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
@@ -69,7 +71,7 @@ hittable_list cornell_box() {
     // objects.add(make_shared<translate>(make_shared<triangle>(point3(-54.657696, 6.065080, -82.045443),point3(-51.320016, -46.565577, 70.381863), point3(-82.744186 ,50.397899, 19.213408), red), vec3(320,170,370)));
 
     // adding triangles from obj file -- good result and fast
-    auto tri = m.loadget(red);
+    auto tri = m.loadget(metalic);
     for (int i = 0; i < tri.size(); i++) {
         objects.add(make_shared<translate>(tri[i], vec3(320,170,370)));
     }
@@ -118,7 +120,7 @@ hittable_list final_scene() {
     // boxes1.add(make_shared<yz_rect>(0, 555, 0, 555, 555, white));
     // boxes1.add(make_shared<yz_rect>(0, 555, 0, 555, 0, white));
     // boxes1.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
-    boxes1.add(make_shared<box>(point3(200, -500, 200), point3(400, 0 , 400), terracottalight));
+    boxes1.add(make_shared<box>(point3(200, -500, 200), point3(400, 0, 400), terracottalight));
     // boxes1.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     // boxes1.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
@@ -147,7 +149,7 @@ int main() {
     const auto aspect_ratio = 1.0;
     const int image_width = 200;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 10000;
+    const int samples_per_pixel = 500;
     const int max_depth = 50;
     color background(0,0,0);
 
