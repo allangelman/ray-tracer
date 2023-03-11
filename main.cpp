@@ -44,15 +44,16 @@ hittable_list cornell_box() {
     auto green = make_shared<lambertian>(color(.12, .45, .15));
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
     auto glass = make_shared<dielectric>(1.5);
-    auto metalic = make_shared<metal>(color(.12, .45, .15), 0.3);
+    auto metalic = make_shared<metal>(color(.72, .45, .2), 0.3);
 
-    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
-    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
-    // objects.add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
-        objects.add(make_shared<xz_rect>(113, 443, 127, 432, 554, light));
-    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
-    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
-    objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
+    objects.add(make_shared<yz_rect>(0, 900, 0, 900, 900, green));
+    objects.add(make_shared<yz_rect>(0, 900, 0, 900, 0, red));
+    // objects.add(make_shared<xz_rect>(213, 343, 227, 332, 899, light));
+    objects.add(make_shared<xz_rect>(200, 443, -500, 282, 899, light));
+
+    objects.add(make_shared<xz_rect>(0, 900, 0, 900, 0, white));
+    objects.add(make_shared<xz_rect>(0, 900, 0, 900, 900, white));
+    objects.add(make_shared<xy_rect>(0, 900, 0, 900, 900, white));
 
     // objects.add(make_shared<triangle>(point3(120, 20, 200),point3(400, 200, 100), point3(400, 22, 300), green));
 
@@ -73,7 +74,7 @@ hittable_list cornell_box() {
     // adding triangles from obj file -- good result and fast
     auto tri = m.loadget(metalic);
     for (int i = 0; i < tri.size(); i++) {
-        objects.add(make_shared<translate>(tri[i], vec3(320,170,370)));
+        objects.add(make_shared<translate>(tri[i], vec3(400,250,370)));
     }
 
     //adding mesh to hittable list -- good result but slow... probably a bug here
@@ -147,20 +148,22 @@ int main() {
     // const auto aspect_ratio = 16.0 / 9.0;
     // const auto aspect_ratio = 3.0 / 2.0;
     const auto aspect_ratio = 1.0;
-    const int image_width = 200;
+    const int image_width = 100;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 500;
-    const int max_depth = 50;
+    const int samples_per_pixel = 50;
+    const int max_depth = 20;
     color background(0,0,0);
 
     //cornell_box
     auto world = cornell_box();
-    auto lookfrom = point3(278, 278, -800);
-    auto lookat = point3(278, 278, 0);
+    // auto lookfrom = point3(278, 278, -800);
+    // auto lookat = point3(278, 278, 0);
+    auto lookfrom = point3(300, 140, -600);
+    auto lookat = point3(380, 280, 0);
     vec3 vup(0,1,0);
     auto dist_to_focus = 10.0;
     auto aperture = 0.1;
-    auto vfov = 40.0;
+    auto vfov = 50.0;
 
     //simple_scene
     // auto world = simple_light();
