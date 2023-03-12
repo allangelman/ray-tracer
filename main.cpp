@@ -148,9 +148,9 @@ int main() {
     // const auto aspect_ratio = 16.0 / 9.0;
     // const auto aspect_ratio = 3.0 / 2.0;
     const auto aspect_ratio = 1.0;
-    const int image_width = 500;
+    const int image_width = 200;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 50;
+    const int samples_per_pixel = 300;
     const int max_depth = 20;
     color background(0,0,0);
 
@@ -159,10 +159,11 @@ int main() {
     // auto lookfrom = point3(278, 278, -800);
     // auto lookat = point3(278, 278, 0);
     auto lookfrom = point3(300, 140, -600);
+    // 400,250,370
     auto lookat = point3(380, 280, 0);
     vec3 vup(0,1,0);
-    auto dist_to_focus = 10.0;
-    auto aperture = 0.1;
+    auto dist_to_focus = 981.0;
+    auto aperture = 2.0;
     auto vfov = 50.0;
 
     //simple_scene
