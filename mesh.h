@@ -84,8 +84,10 @@ class mesh : public hittable {
                 auto vert0Index = faces_info[i][0] - 1 ;
                 auto vert1Index = faces_info[i][2] - 1;
                 auto vert2Index = faces_info[i][4] - 1 ;
-                auto normalIndex = faces_info[i][1] - 1;
-                auto tri = make_shared<triangle>(vertices[vert0Index], vertices[vert1Index], vertices[vert2Index], m, normals[normalIndex]);
+                auto normal0Index = faces_info[i][1] - 1;
+                auto normal1Index = faces_info[i][3] - 1;
+                auto normal2Index = faces_info[i][5] - 1;
+                auto tri = make_shared<triangle>(vertices[vert0Index], vertices[vert1Index], vertices[vert2Index], m, normals[normal0Index], normals[normal1Index], normals[normal2Index]);
                 triangles.push_back(tri);
 
             }
