@@ -60,7 +60,7 @@ class metal : public material {
 
 class mirror : public material {
     public:
-       metal(const color& a) : albedo(a)) {}
+       mirror(const color& a) : albedo(a) {}
 
         virtual bool scatter(
             const ray& r_in, const hit_data& data, color& attenuation, ray& scattered
