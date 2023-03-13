@@ -58,6 +58,24 @@ class metal : public material {
         double fuzz;
 };
 
+class mirror : public material {
+    public:
+       metal(const color& a) : albedo(a)) {}
+
+        virtual bool scatter(
+            const ray& r_in, const hit_data& data, color& attenuation, ray& scattered
+        ) const override {
+            vec3 reflected = reflect(unit_vector(r_in.direction()), data.hit_normal);
+            scattered = ray(data.hit_point, reflected);
+            // scattered = ray(data.hit_point, reflected);
+            attenuation = albedo;
+            return (dot(scattered.direction(), data.hit_normal) > 0);
+        }
+
+    public:
+        color albedo;
+};
+
 class dielectric : public material {
     public:
         dielectric(double index_of_refraction) : ir(index_of_refraction) {}

@@ -45,8 +45,9 @@ hittable_list cornell_box() {
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
     auto glass = make_shared<dielectric>(1.5);
     auto metalic = make_shared<metal>(color(.72, .45, .2), 0.3);
+    auto metalicwall = make_shared<mirror>(color(.30, .45, .23));
 
-    objects.add(make_shared<yz_rect>(0, 900, -700, 900, 900, green));
+    objects.add(make_shared<yz_rect>(0, 900, -700, 900, 900, metalicwall));
     objects.add(make_shared<yz_rect>(0, 900, -700, 900, 0, red));
     // objects.add(make_shared<xz_rect>(213, 343, 227, 332, 899, light));
     objects.add(make_shared<xz_rect>(200, 443, -500, 282, 899, light));
@@ -147,11 +148,11 @@ int main() {
 
     // Image
     // const auto aspect_ratio = 16.0 / 9.0;
-    // const auto aspect_ratio = 3.0 / 2.0;
-    const auto aspect_ratio = 1.0;
-    const int image_width = 500;
+    const auto aspect_ratio = 3.0 / 2.0;
+    // const auto aspect_ratio = 1.0;
+    const int image_width = 100;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 500;
+    const int samples_per_pixel = 100;
     const int max_depth = 20;
     color background(0,0,0);
 
