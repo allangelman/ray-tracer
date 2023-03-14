@@ -52,8 +52,8 @@ hittable_list cornell_box() {
     // objects.add(make_shared<xz_rect>(213, 343, 227, 332, 899, light));
     objects.add(make_shared<xz_rect>(200, 443, -500, 282, 899, light));
 
-    objects.add(make_shared<xz_rect>(-700, 900, 0, 900, 0, white));
-    objects.add(make_shared<xz_rect>(-700, 900, 0, 900, 900, white));
+    objects.add(make_shared<xz_rect>(0, 900, -700, 900, 0, white));
+    objects.add(make_shared<xz_rect>(0, 900, -700, 900, 900, white));
     objects.add(make_shared<xy_rect>(0, 900, 0, 900, 900, white));
     objects.add(make_shared<xy_rect>(0, 900, 0, 900, -700, white));
 
@@ -150,9 +150,9 @@ int main() {
     // const auto aspect_ratio = 16.0 / 9.0;
     const auto aspect_ratio = 3.0 / 2.0;
     // const auto aspect_ratio = 1.0;
-    const int image_width = 250;
+    const int image_width = 500;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 200;
+    const int samples_per_pixel = 1000;
     const int max_depth = 20;
     color background(0,0,0);
 
