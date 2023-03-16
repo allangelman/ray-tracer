@@ -91,7 +91,7 @@ hittable_list bunny() {
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 1500, purple));
 
     // adding triangles from obj file -- good result and fast
-    auto tri = m.loadget(metalic);
+    auto tri = m.loadget(glass);
     for (int i = 0; i < tri.size(); i++) {
         objects.add(make_shared<translate>(tri[i], vec3(250,250,870)));
     }
@@ -139,9 +139,9 @@ int main() {
     // const auto aspect_ratio = 16.0 / 9.0;
     const auto aspect_ratio = 3.0 / 2.0;
     // const auto aspect_ratio = 1.0;
-    const int image_width = 250;
+    const int image_width = 500;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 250;
+    const int samples_per_pixel = 1000;
     const int max_depth = 20;
     color background(0,0,0);
 
