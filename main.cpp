@@ -139,10 +139,10 @@ int main() {
     // const auto aspect_ratio = 16.0 / 9.0;
     const auto aspect_ratio = 3.0 / 2.0;
     // const auto aspect_ratio = 1.0;
-    const int image_width = 500;
+    const int image_width = 600;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 1000;
-    const int max_depth = 20;
+    const int samples_per_pixel = 1300;
+    const int max_depth = 25;
     color background(0,0,0);
 
     //cornell_box_basic
@@ -168,7 +168,7 @@ int main() {
     auto lookfrom = point3(265, 450, -200);
     auto lookat = point3(310, 380, 200);
     vec3 vup(0,1,0);
-    auto dist_to_focus = 10.0;
+    auto dist_to_focus = 1088.63;
     auto aperture = 0.2;
     auto vfov = 40.0;
 
