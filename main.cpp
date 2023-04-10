@@ -186,7 +186,7 @@ int main() {
     const int image_width = 600;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 6000; //could be higher
-    const int max_depth = 8; //should be 3-5... only helps with reflection refraction
+    const int max_depth = 5; //should be 3-5... only helps with reflection refraction
     color background(0,0,0);
 
     //cornell_box_basic
@@ -199,22 +199,22 @@ int main() {
     // auto vfov = 40.0;
 
     //samovar
-    // auto world = samovar();
-    // auto lookfrom = point3(300, 140, -600);
-    // auto lookat = point3(380, 280, 0);
-    // vec3 vup(0,1,0);
-    // auto dist_to_focus = 981.0;
-    // auto aperture = 2.0;
-    // auto vfov = 50.0;
+    auto world = samovar();
+    auto lookfrom = point3(300, 140, -600);
+    auto lookat = point3(380, 280, 0);
+    vec3 vup(0,1,0);
+    auto dist_to_focus = 981.0;
+    auto aperture = 2.0;
+    auto vfov = 50.0;
 
     //bunny
-    auto world = bunny();
-    auto lookfrom = point3(265, 450, -200);
-    auto lookat = point3(310, 380, 200);
-    vec3 vup(0,1,0);
-    auto dist_to_focus = 1088.63;
-    auto aperture = 0.2;
-    auto vfov = 40.0;
+    // auto world = bunny();
+    // auto lookfrom = point3(265, 450, -200);
+    // auto lookat = point3(310, 380, 200);
+    // vec3 vup(0,1,0);
+    // auto dist_to_focus = 1088.63;
+    // auto aperture = 0.2;
+    // auto vfov = 40.0;
 
     // shapes
     // auto world = shapes();
