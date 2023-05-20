@@ -34,7 +34,6 @@ class triangle : public hittable {
 
 bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) const {
     // using barycentric
-    // look at 6.837 slides
     Matrix3f A;
     A(0) = point_a[0] - point_b[0];
 	A(1) = point_a[1] - point_b[1];
@@ -56,7 +55,6 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
 
     // without this conditional causes image that is named trianglebug.ppm
     if (x[2] < data.t || t_max == infinity) {
-        // std::cerr << "x[2]: " << x[2] << "\n";
         vec3 triangle_vec_1 = point_a - point_b;
         vec3 triangle_vec_2 = point_c - point_b;
 
@@ -64,18 +62,12 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
         data.hit_point = r.at(data.t);
         if (normal_a[0] == 0 && normal_a[1] == 0 && normal_a[2] ==0 ){
             vec3 outward_normal = cross(triangle_vec_2, triangle_vec_1);
-            // data.hit_normal = outward_normal;
             data.set_face_normal(r, outward_normal);
         }
         else{
             float alpha = 1 - (x[0] + x[1]);
-            //  std::cerr << "alpha: " << alpha << "\n";
-            //  std::cerr << "1: " << alpha*(unit_vector(normal_a)) << "\n";
-            //  std::cerr << "2: " << x[0]*(unit_vector(normal_b)) << "\n";
-            // std::cerr << "3: " <<  x[1]*(unit_vector(normal_c)) << "\n";
             vec3 interpolation = alpha*(unit_vector(normal_a)) + x[0]*(unit_vector(normal_b)) + x[1]*(unit_vector(normal_c));
             data.hit_normal = unit_vector(interpolation);
-            // data.set_face_normal(r, unit_vector(interpolation));
         }
         data.material_pointer = material_pointer;
 
@@ -86,6 +78,7 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
     return false;
 }
 
+//alternative triangle hit method
 // bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) const {
 //     const float EPSILON = 0.0000001;
 
@@ -125,9 +118,6 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
 //     }
 //     else // This means that there is a line intersection but not a ray intersection.
 //         return false;
-
-
-
 //     return false;
 // }
 

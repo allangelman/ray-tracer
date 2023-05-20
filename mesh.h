@@ -18,7 +18,7 @@ class mesh : public hittable {
             load(m);
         }
 
-        std::vector<shared_ptr<triangle>> loadget(shared_ptr<material> m) {
+        std::vector<shared_ptr<triangle>> get_triangles(shared_ptr<material> m) {
             load(m);
             return triangles;
         }

@@ -43,9 +43,7 @@ hittable_list samovar() {
     auto white = make_shared<lambertian>(color(.73, .73, .73));
     auto green = make_shared<lambertian>(color(.12, .45, .15));
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
-    auto glass = make_shared<dielectric>(1.5);
     auto metalic = make_shared<metal>(color(.72, .45, .2), 0.3);
-    auto metalicwall = make_shared<mirror>(color(.30, .45, .23));
 
     objects.add(make_shared<yz_rect>(0, 900, -700, 900, 900, green));
     objects.add(make_shared<yz_rect>(0, 900, -700, 900, 0, red));
@@ -57,7 +55,7 @@ hittable_list samovar() {
     objects.add(make_shared<xy_rect>(0, 900, 0, 900, -700, white));
 
     // adding triangles from obj file -- good result and fast
-    auto tri = m.loadget(metalic);
+    auto tri = m.get_triangles(metalic);
     for (int i = 0; i < tri.size(); i++) {
         objects.add(make_shared<translate>(tri[i], vec3(400,250,370)));
     }
@@ -72,15 +70,12 @@ hittable_list bunny() {
     hittable_list world;
     mesh m;
 
-    auto red   = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
     auto green = make_shared<lambertian>(color(.27, .51, .71));
     auto orange = make_shared<lambertian>(color(1.0, .29, .31));
     auto purple = make_shared<lambertian>(color(0.28, .24, .55));
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
     auto glass = make_shared<dielectric>(1.5);
-    auto metalic = make_shared<metal>(color(.72, .45, .2), 0.3);
-    auto mirrormat = make_shared<mirror>(color(.30, .45, .23));
 
     objects.add(make_shared<xz_rect>(213, 343, 827, 932, 554, light));
 
@@ -91,7 +86,7 @@ hittable_list bunny() {
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 1500, purple));
 
     // adding triangles from obj file -- good result and fast
-    auto tri = m.loadget(glass);
+    auto tri = m.get_triangles(glass);
     for (int i = 0; i < tri.size(); i++) {
         objects.add(make_shared<translate>(tri[i], vec3(250,250,870)));
     }
@@ -108,21 +103,18 @@ hittable_list shapes() {
 
     auto red   = make_shared<lambertian>(color(.55, .15, .25));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
-    auto green = make_shared<lambertian>(color(.27, .51, .71));
     auto orange = make_shared<lambertian>(color(1.0, .29, .31));
     auto purple = make_shared<lambertian>(color(0.28, .24, .55));
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
-    auto purplelight = make_shared<diffuse_light>(color(3, 7, 10));
     auto glass = make_shared<dielectric>(1.5);
     auto metalic = make_shared<metal>(color(.72, .45, .2), 0.3);
     auto yellow = make_shared<lambertian>(color(.72, .45, .2));
-    auto mirrormat = make_shared<mirror>(color(.30, .05, .23));
+    auto mirror_material = make_shared<mirror>(color(.30, .05, .23));
 
     objects.add(make_shared<xz_rect>(163, 393, 777, 982, 554, light));
-    // objects.add(make_shared<xy_rect>(300, 400, 200, 300, -100, purplelight));
 
     objects.add(make_shared<yz_rect>(0, 555, 0, 1500, 555, purple));
-    objects.add(make_shared<yz_rect>(0, 555, 0, 1500, 0, mirrormat));
+    objects.add(make_shared<yz_rect>(0, 555, 0, 1500, 0, mirror_material));
     objects.add(make_shared<xz_rect>(0, 555, 0, 1500, 0, white));
     objects.add(make_shared<xz_rect>(0, 555, 0, 1500, 555, white));
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 1500, yellow));
@@ -132,8 +124,6 @@ hittable_list shapes() {
 
     objects.add(make_shared<sphere>(vec3(260,390,930), 40, glass));
     shared_ptr<hittable> box1 = make_shared<box>(vec3(200,0,870), vec3(320,350,990), metalic);
-    // box1 = make_shared<translate>(box1, vec3(1,0,1));
-    // box1 = make_shared<rotate_y>(box1, 50.0);
     objects.add(box1);
 
 
@@ -155,8 +145,6 @@ hittable_list cornell_box() {
     auto green = make_shared<lambertian>(color(.12, .45, .15));
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
     auto glass = make_shared<dielectric>(1.5);
-    auto metalic = make_shared<metal>(color(.72, .45, .2), 0.3);
-    auto metalicwall = make_shared<mirror>(color(.30, .45, .23));
 
     objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
     objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
@@ -166,7 +154,7 @@ hittable_list cornell_box() {
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
     // adding triangles from obj file -- good result and fast
-    auto tri = m.loadget(glass);
+    auto tri = m.get_triangles(glass);
     for (int i = 0; i < tri.size(); i++) {
         objects.add(make_shared<translate>(tri[i], vec3(400,250,370)));
     }
@@ -183,9 +171,9 @@ int main() {
     // const auto aspect_ratio = 16.0 / 9.0;
     const auto aspect_ratio = 3.0 / 2.0;
     // const auto aspect_ratio = 1.0;
-    const int image_width = 600;
+    const int image_width = 200;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 6000; //could be higher
+    const int samples_per_pixel = 100; //could be higher
     const int max_depth = 5; //should be 3-5... only helps with reflection refraction
     color background(0,0,0);
 
@@ -231,7 +219,7 @@ int main() {
 
     // Render
 
-    //This line is important for ppm images I think
+    //This line is important for ppm images
     std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 
     for (int j = 0; j < image_height; ++j) {
