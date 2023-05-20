@@ -177,7 +177,7 @@ int main() {
     const int max_depth = 5; //should be 3-5... only helps with reflection refraction
     color background(0,0,0);
 
-    //cornell_box_basic
+    // cornell_box_basic
     // auto world = cornell_box();
     // auto lookfrom = point3(278, 278, -800);
     // auto lookat = point3(278, 278, 0);
@@ -186,7 +186,7 @@ int main() {
     // auto aperture = 0.2;
     // auto vfov = 40.0;
 
-    //samovar
+    // samovar9.obj
     auto world = samovar();
     auto lookfrom = point3(300, 140, -600);
     auto lookat = point3(380, 280, 0);
@@ -195,7 +195,7 @@ int main() {
     auto aperture = 2.0;
     auto vfov = 50.0;
 
-    //bunny
+    // bunnybig2.obj
     // auto world = bunny();
     // auto lookfrom = point3(265, 450, -200);
     // auto lookat = point3(310, 380, 200);
