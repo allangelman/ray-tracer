@@ -26,6 +26,14 @@ To create a render that includes a OBJ mesh, run this command. This will load in
 
 # Renders
 
+![image 8h 10m 5s](https://github.com/allangelman/ray-tracer/assets/45411265/44a65569-072e-4dcb-86cd-ca76458338bf)
+
+
+![image1d 16h 22m 46s ](https://github.com/allangelman/ray-tracer/assets/45411265/9c4a1203-0616-4330-a46b-a4caa43d9ca2)
+
+
+![image2d 21h 17m 50s](https://github.com/allangelman/ray-tracer/assets/45411265/8ddb90d6-3c60-4c9b-8271-742b3fb62ab9)
+
 # How this works
 
 ## Mesh loading
