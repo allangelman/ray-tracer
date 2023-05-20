@@ -44,10 +44,35 @@ This image shows a low-poly standford bunny with a glass material. This model co
 
 # How this works
 
+## Camera, Ray, and Hittable
+
+I initially started implementing the Ray Tracing in One Weekend book. This involved setting up camera, ray, hittable classes. Hittable is an abstract class that other classes like sphere, aabb, and aarect all implement. Each hittable class implements these methods:
+
+- hit
+- bounding_box
+
+Camera takes in these paramaters:
+
+- lookfrom,
+- lookat,
+- vup,
+- vfov, // vertical field-of-view in degrees
+- aspect_ratio,
+- aperture,
+- focus_dist
+
+Ray is defined by a point as the origin and a vector for the direction.
+
+## Bounding Volume Hierarchy (BVH)
+
+This is an acceleration data structure that I referenced the Ray Tracing: The Next Week book to implement.
+
 ## Mesh loading
 
-## BVH
-
-## Barycentric
+For mesh loading, I ended up referencing a computer graphics course I took in college. I first had to figure out how to make a triangle hittable class, since a mesh is just a collection of triangles. Figuring out the correct triangle hit method was the
 
 # Next Steps
+
+For next steps, I would like to explore more acceleration data structures. My glass bunny took a while to render, and I am curious how to expidite that.
+
+# Bloopers
