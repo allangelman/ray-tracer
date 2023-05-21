@@ -119,8 +119,23 @@ For mesh loading, I ended up referencing a computer graphics course I took in co
 
 As you can see, the center of the samovar is triangulated when using the Moller-Trumbone method
 
+![triangles](https://github.com/allangelman/ray-tracer/assets/45411265/c391856d-f4c2-4caf-a8a0-47f3abc3735f)
+
+
 # Next Steps
 
 For next steps, I would like to explore more acceleration data structures. My glass bunny took a while to render, and I am curious how to expidite that.
 
 # Bloopers
+
+![calculating roots incorrectly I think](https://github.com/allangelman/ray-tracer/assets/45411265/73011bea-f74b-4251-9535-fbe5241fde88)
+
+![cornel](https://github.com/allangelman/ray-tracer/assets/45411265/f1f334b9-29dc-4bb8-948e-d7f8f334afd7)
+
+![didn'ttriangulate](https://github.com/allangelman/ray-tracer/assets/45411265/7174e225-663d-4037-a542-31472aff7d6a)
+
+![interpattempt](https://github.com/allangelman/ray-tracer/assets/45411265/41e7ddd2-1d0e-46d3-a53a-34209f8ac8ed)
+
+![susanbig](https://github.com/allangelman/ray-tracer/assets/45411265/c06dcdbc-b28e-412e-9e70-59e9395c501e)
+
+
