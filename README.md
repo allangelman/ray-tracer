@@ -121,21 +121,23 @@ As you can see, the center of the samovar is triangulated when using the Moller-
 
 ![triangles](https://github.com/allangelman/ray-tracer/assets/45411265/c391856d-f4c2-4caf-a8a0-47f3abc3735f)
 
-
 # Next Steps
 
 For next steps, I would like to explore more acceleration data structures. My glass bunny took a while to render, and I am curious how to expidite that.
 
 # Bloopers
 
+This render happened early on when I was calculating the intersection of the sphere and I made a mistake in the roots calculation. Very funky!
 ![calculating roots incorrectly I think](https://github.com/allangelman/ray-tracer/assets/45411265/73011bea-f74b-4251-9535-fbe5241fde88)
 
+This was a great milestone, when I finally got a triangle to render!
 ![cornel](https://github.com/allangelman/ray-tracer/assets/45411265/f1f334b9-29dc-4bb8-948e-d7f8f334afd7)
 
+This was a silly mistake. I was trying to render a cube, but I left it quaded and forgot to triangulate the mesh before exporting it as an OBJ. My implemntation expects the OBJs to include triangles, not quads, so the render came out like this, only displaying half of the triangles of the cube.
 ![didn'ttriangulate](https://github.com/allangelman/ray-tracer/assets/45411265/7174e225-663d-4037-a542-31472aff7d6a)
 
+This was a cool render I made when deciding what material to render the standford bunny in. Looking at it again, I would like to render this at a bigger size and with more samples at some point, because this metalic bunny looks pretty cool!
 ![interpattempt](https://github.com/allangelman/ray-tracer/assets/45411265/41e7ddd2-1d0e-46d3-a53a-34209f8ac8ed)
 
+This was also a milestone. I believe the suzanne model was the first more complicated mesh I rendered with my ray tracer! There were still some bugs at this point, where the mesh only rendered if there was a plane behind it, hence the pink background.
 ![susanbig](https://github.com/allangelman/ray-tracer/assets/45411265/c06dcdbc-b28e-412e-9e70-59e9395c501e)
-
-
