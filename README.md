@@ -121,6 +121,8 @@ As you can see, the center of the samovar is triangulated when using the Moller-
 
 ![triangles](https://github.com/allangelman/ray-tracer/assets/45411265/c391856d-f4c2-4caf-a8a0-47f3abc3735f)
 
+The next step was making a mesh class which was simply a list of triangles. This is where I loaded in my OBJ. This was simply a matter of parsing every line of the OBJ, which actually has a fairly simple file format. Each line is prefixed with a v, vn, or f for vertex, vertex normal, and face. Each face line includes nine numbers in the format: a/b/c d/e/f g/h/i. This defines a face with three vertices with indices a, d, g and normals c, f, i.
+
 # Next Steps
 
 For next steps, I would like to explore more acceleration data structures. My glass bunny took a while to render, and I am curious how to expedite that.
