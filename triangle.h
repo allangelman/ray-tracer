@@ -78,7 +78,7 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) con
     return false;
 }
 
-//alternative triangle hit method
+// Alternative triangle hit method
 // bool triangle::hit(const ray& r, double t_min, double t_max, hit_data& data) const {
 //     const float EPSILON = 0.0000001;
 
