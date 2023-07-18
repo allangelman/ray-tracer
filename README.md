@@ -8,7 +8,7 @@ For this personal project, I decided to reference the [Ray Tracing in One Weeken
 
 # How to use
 
-To create the build file run this command after cd'ing into the project. This will save a new build file called `raytracer` at the `./build` directory:
+To create the build file, run this command after cd'ing into the project. This will save a new build file called `raytracer` at the `./build` directory:
 
 ```
 g++ -std=c++11 -I /Eigen main.cpp -o ./build/raytracer
